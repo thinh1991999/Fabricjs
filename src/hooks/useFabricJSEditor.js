@@ -5,7 +5,9 @@ import {
   RECTANGLE,
   LINE,
   CIRCLE,
+  TEXT,
 } from "../constants/defaultShapes";
+import { guidGenerator } from "../utils";
 
 /**
  * Creates editor
@@ -22,6 +24,7 @@ const buildEditor = (
     addCircle: () => {
       const object = new fabric.Circle({
         ...CIRCLE,
+        id: guidGenerator(),
         fill: fillColor,
         stroke: strokeColor,
       });
@@ -42,9 +45,13 @@ const buildEditor = (
       });
       canvas.add(object);
     },
-    addText: (text) => {
+    addText: (text, values) => {
       // use stroke in text fill, fill default is most of the time transparent
-      const object = new fabric.Textbox(text, { ...TEXT, fill: strokeColor });
+      const object = new fabric.Textbox(text, {
+        ...TEXT,
+        id: guidGenerator(),
+        ...values,
+      });
       object.set({ text: text });
       canvas.add(object);
     },
@@ -93,11 +100,74 @@ const buildEditor = (
       const zoom = canvas.getZoom();
       canvas.setZoom(zoom * scaleStep);
     },
+    uploadImage: (file) => {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        var imgObj = new Image();
+        imgObj.src = event.target.result;
+        imgObj.onload = function () {
+          console.log(imgObj);
+          var image = new fabric.Image(imgObj, {
+            id: guidGenerator(),
+          });
+          // image.set({
+          //       angle: 0,
+          //       padding: 10,
+          //       cornersize:10,
+          //       height:110,
+          //       width:110,
+          // });
+          canvas.centerObject(image);
+          canvas.add(image);
+          canvas.renderAll();
+        };
+      };
+      reader.readAsDataURL(file);
+    },
+    updateTextProperties: (type, val) => {
+      canvas.getActiveObject().set(type, val);
+      canvas.renderAll();
+    },
+    updateShapeProperties: (type, val) => {
+      canvas.getActiveObject().set(type, val);
+      canvas.renderAll();
+    },
+    downloadImage: () => {
+      const dataURL = canvas.toDataURL({
+        format: "png",
+        quality: 1.0,
+      });
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = "canvas.png";
+      a.click();
+    },
+    downloadJson: () => {
+      const json = canvas.toJSON();
+      const blob = new Blob([JSON.stringify(json)], {
+        type: "application/json",
+      });
+
+      // Create a download link for the Blob
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "canvas.json";
+      a.click();
+    },
+    getJson:()=>{
+      return canvas.toJSON();
+    },
+    getImage:()=>{
+      return canvas.toDataURL({
+        format: "png",
+        quality: 1.0,
+      });
+    }
   };
 };
 
 export const useFabricJSEditor = (props = {}) => {
-  const { defaultFillColor, defaultStrokeColor } = props;
+  const { defaultFillColor, defaultStrokeColor, renderLayers } = props;
   const [canvas, setCanvas] = useState(null);
   const [fillColor, setFillColor] = useState(defaultFillColor || FILL);
   const [strokeColor, setStrokeColor] = useState(defaultStrokeColor || STROKE);
@@ -113,11 +183,17 @@ export const useFabricJSEditor = (props = {}) => {
       canvas.on("selection:updated", (e) => {
         setSelectedObject(e.selected);
       });
+      canvas.on("object:added", () => {
+        renderLayers()
+      });
+      canvas.on("object:removed", () => {
+        renderLayers()
+      });
     };
     if (canvas) {
       bindEvents(canvas);
     }
-  }, [canvas]);
+  }, [canvas,renderLayers]);
 
   return {
     selectedObjects,

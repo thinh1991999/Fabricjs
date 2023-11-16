@@ -2,6 +2,7 @@ import { FaShapes, FaCloudUploadAlt, FaPencilAlt } from "react-icons/fa";
 import { PiTextT } from "react-icons/pi";
 import SbElement from "../components/CreateTemplate/SbElement";
 import SbText from "../components/CreateTemplate/SbText";
+import SbUpload from "../components/CreateTemplate/SbUpload";
 
 const ElementData = [];
 
@@ -22,7 +23,7 @@ export const createTLSideData = [
     hint: "upload",
     title: "Uploads",
     icon: <FaCloudUploadAlt />,
-    child: ElementData,
+    child: <SbUpload />,
   },
   {
     hint: "draw",

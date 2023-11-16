@@ -5,3 +5,9 @@ export const addSquare = (editor) => {
 export const addCircle = (editor) => {
   editor?.addCircle();
 };
+
+export const addText = (editor, text, size) => {
+  editor?.addText(text, {
+    fontSize: size,
+  });
+};

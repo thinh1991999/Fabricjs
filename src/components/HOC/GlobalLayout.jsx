@@ -5,7 +5,7 @@ const GlobalLayout = ({ children }) => {
   return (
     <>
       <Header />
-      <main className="py-10">{children}</main>
+      <main className="py-10 ">{children}</main>
       <Footer />
     </>
   );

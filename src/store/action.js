@@ -4,3 +4,18 @@ export const changeObjectEditTL = (payload) => {
     payload,
   };
 };
+
+
+export const toggleEditableText = (payload) => {
+  return {
+    type: "TOGGLE_EDITABLE_TEXT",
+    payload,
+  };
+};
+
+export const toggleEditableImage = (payload) => {
+  return {
+    type: "TOGGLE_EDITABLE_IMAGE",
+    payload,
+  };
+};

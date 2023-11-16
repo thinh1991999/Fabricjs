@@ -16,9 +16,15 @@ const Canvas = ({ onReady }) => {
     const resizeCanvas = () => {
       setCurrentDimensions();
     };
+
+    const deleteObject = (e) => {
+      e.keyCode===46 && canvas.remove(canvas.getActiveObject());
+    };
     setCurrentDimensions();
 
     window.addEventListener("resize", resizeCanvas, false);
+    window.addEventListener("keyup", deleteObject, false);
+
     console.log(onReady);
     if (onReady && typeof onReady === "function") {
       onReady(canvas);
@@ -26,6 +32,7 @@ const Canvas = ({ onReady }) => {
     return () => {
       canvas.dispose();
       window.removeEventListener("resize", resizeCanvas);
+      window.removeEventListener("keyup", deleteObject);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

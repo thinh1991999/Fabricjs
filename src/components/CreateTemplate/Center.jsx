@@ -4,11 +4,7 @@ import Canvas from "../Canvas";
 
 const Center = () => {
   const onReady = useContext(CreateTemplateContext).onReady;
-  return (
-    <div className="">
-      <Canvas onReady={onReady} />;
-    </div>
-  );
+  return <Canvas onReady={onReady} />;
 };
 
 export default Center;

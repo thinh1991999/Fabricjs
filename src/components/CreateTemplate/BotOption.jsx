@@ -10,10 +10,7 @@ const BotOption = () => {
   const selectedObjects = useContext(CreateTemplateContext).selectedObjects;
   const state = useContext(CreateTemplateContext).state;
   const dispatch = useContext(CreateTemplateContext).dispatch;
-
-  console.log(state);
-  console.log("BotOption", editor);
-
+  console.log('BotOption');
   const handleZoom = (e) => {
     if (!editor) return;
     const vl = e.target.value;
@@ -31,11 +28,9 @@ const BotOption = () => {
       img:editor?.getImage(),
       canvasObj:editor?.getJson()
     }
-    console.log(obj);
   }
 
   const isEditable = useMemo(() => {
-    console.log(state);
     if (selectedObjects.length < 1 || !state) return;
     const id = selectedObjects[0].id;
     const { editableTexts, editableImages, editableBackgrounds } = state;

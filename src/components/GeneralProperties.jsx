@@ -30,7 +30,6 @@ const GeneralProperties = ({ selectedObject, editor }) => {
     setFontStyle(fontStyle);
     setUnderline(underline);
   }, [selectedObject]);
-  console.log(fill);
   return (
     <div className="flex items-center">
       <div className="inline-block mr-5">

@@ -34,6 +34,7 @@ const buildEditor = (
       const object = new fabric.Rect({
         ...RECTANGLE,
         fill: fillColor,
+        id: guidGenerator(),
         stroke: strokeColor,
       });
       canvas.add(object);
@@ -110,6 +111,7 @@ const buildEditor = (
           var image = new fabric.Image(imgObj, {
             id: guidGenerator(),
           });
+          image.scaleToWidth(300, false);
           // image.set({
           //       angle: 0,
           //       padding: 10,
@@ -154,13 +156,29 @@ const buildEditor = (
       a.download = "canvas.json";
       a.click();
     },
-    getJson:()=>{
-      return canvas.toJSON();
+    getJson: () => {
+      return canvas.getObjects();
     },
-    getImage:()=>{
+    getImage: () => {
       return canvas.toDataURL({
         format: "png",
         quality: 1.0,
+      });
+    },
+    selectObj: (id) => {
+      canvas.getObjects().forEach(function (o) {
+        if (o.id === id) {
+          canvas.setActiveObject(o);
+        }
+      });
+    },
+    reorderObj:(id,idx)=>{
+      console.log(idx);
+      canvas.getObjects().forEach(function (o) {
+        if (o.id === id) {
+          o.moveTo(idx);
+          return false;
+        }
       });
     }
   };
@@ -184,16 +202,16 @@ export const useFabricJSEditor = (props = {}) => {
         setSelectedObject(e.selected);
       });
       canvas.on("object:added", () => {
-        renderLayers()
+        renderLayers();
       });
       canvas.on("object:removed", () => {
-        renderLayers()
+        renderLayers();
       });
     };
     if (canvas) {
       bindEvents(canvas);
     }
-  }, [canvas,renderLayers]);
+  }, [canvas, renderLayers]);
 
   return {
     selectedObjects,

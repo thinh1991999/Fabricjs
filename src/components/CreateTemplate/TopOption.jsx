@@ -23,7 +23,9 @@ const TopOption = () => {
     }
   }, [selectedObjects, editor]);
 
-  return <div className="py-2 bg-white border-b-2">{renderOptions}</div>;
+  return (
+    <div className="py-2 bg-white border-b-2 min-h-[80px]">{renderOptions}</div>
+  );
 };
 
 export default TopOption;

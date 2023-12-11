@@ -1,5 +1,12 @@
 /* eslint-disable react/no-unknown-property */
-import { forwardRef, useContext, useImperativeHandle, useMemo, useState } from "react";
+import {
+  forwardRef,
+  useContext,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
+import { TextInput } from "flowbite-react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { CreateTemplateContext } from "../../pages/CreateTemplate";
 const reorder = (list, startIndex, endIndex) => {
@@ -29,97 +36,31 @@ const getListStyle = (isDraggingOver) => ({
   width: 250,
 });
 
-const Layer = () => {};
-
-// const LayerContainer = () => {
-//   // const editor = useContext(CreateTemplateContext).editor;
-//   console.log('LayerContainer');
-//   const onDragEnd = (result) => {
-//     // if (result.combine) {
-//     //   if (result.type === "COLUMN") {
-//     //     const shallow = [...ordered];
-//     //     shallow.splice(result.source.index, 1);
-//     //     setOrdered(shallow);
-//     //     return;
-//     //   }
-
-//     //   const column = columns[result.source.droppableId];
-//     //   const withQuoteRemoved = [...column];
-
-//     //   withQuoteRemoved.splice(result.source.index, 1);
-
-//     //   const orderedColumns = {
-//     //     ...columns,
-//     //     [result.source.droppableId]: withQuoteRemoved,
-//     //   };
-//     //   setColumns(orderedColumns);
-//     //   return;
-//     // }
-
-//     // // dropped nowhere
-//     // if (!result.destination) {
-//     //   return;
-//     // }
-
-//     // const source = result.source;
-//     // const destination = result.destination;
-
-//     // // did not move anywhere - can bail early
-//     // if (
-//     //   source.droppableId === destination.droppableId &&
-//     //   source.index === destination.index
-//     // ) {
-//     //   return;
-//     // }
-
-//     // // reordering column
-//     // if (result.type === "COLUMN") {
-//     //   const reorderedorder = reorder(ordered, source.index, destination.index);
-
-//     //   setOrdered(reorderedorder);
-
-//     //   return;
-//     // }
-
-//     // const data = reorderQuoteMap({
-//     //   quoteMap: columns,
-//     //   source,
-//     //   destination,
-//     // });
-
-//     // setColumns(data.quoteMap);
-//   };
-//   return (
-//     <></>
-//     // <DragDropContext onDragEnd={onDragEnd}>
-//     //   <Droppable
-//     //     droppableId="board"
-//     //     type="COLUMN"
-//     //     direction="horizontal"
-//     //     // ignoreContainerClipping={Boolean(containerHeight)}
-//     //     // isCombineEnabled={isCombineEnabled}
-//     //   >
-
-//     //   </Droppable>
-//     // </DragDropContext>
-//   );
-// };
-
 // eslint-disable-next-line react/display-name
 const LayerContainer = forwardRef((props, ref) => {
   const editor = useContext(CreateTemplateContext).editor;
   const selectedObjects = useContext(CreateTemplateContext).selectedObjects;
 
   const [layers, setLayers] = useState([]);
+  const [editableLayer, setEditableLayer] = useState();
 
-  const selectedObjId=useMemo(()=>{
-    if(selectedObjects.length<1) return;
-    return selectedObjects[0].id
-  },[selectedObjects])
+  const selectedObjId = useMemo(() => {
+    if (selectedObjects.length < 1) return;
+    return selectedObjects[0].id;
+  }, [selectedObjects]);
 
-  const handleSetActiveObj=(id)=>{
+  const handleSetActiveObj = (id) => {
     editor?.selectObj(id);
-  }
+  };
+
+  const handleDoubleClickObj = (layer) => {
+    setEditableLayer(layer);
+  };
+
+  const handleChangeNameObj = (e) => {
+    editor?.changeNameObj(editableLayer.id, e.target.value);
+    setEditableLayer(null);
+  };
 
   const onDragEnd = (result) => {
     // if (result.combine) {
@@ -155,7 +96,7 @@ const LayerContainer = forwardRef((props, ref) => {
     );
     setLayers(items);
     editor?.selectObj(result.draggableId);
-    editor?.reorderObj(result.draggableId,result.destination.index);
+    editor?.reorderObj(result.draggableId, result.destination.index);
   };
   // Use useImperativeHandle to customize the instance value exposed by the ref
   useImperativeHandle(ref, () => ({
@@ -166,9 +107,7 @@ const LayerContainer = forwardRef((props, ref) => {
   }));
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable
-        droppableId="board"
-      >
+      <Droppable droppableId="board">
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
@@ -176,7 +115,13 @@ const LayerContainer = forwardRef((props, ref) => {
             style={getListStyle(snapshot.isDraggingOver)}
           >
             {layers.map((layer, idx) => {
-              return (
+              return layer.id === editableLayer?.id ? (
+                <TextInput
+                  type="text"
+                  defaultValue={editableLayer.name}
+                  onBlur={handleChangeNameObj}
+                />
+              ) : (
                 <Draggable draggableId={layer.id} key={layer.id} index={idx}>
                   {(provided, snapshot) => (
                     <div
@@ -186,34 +131,23 @@ const LayerContainer = forwardRef((props, ref) => {
                       style={getItemStyle(
                         snapshot.isDragging,
                         provided.draggableProps.style,
-                        selectedObjId===layer.id
+                        selectedObjId === layer.id
                       )}
-                      onClick={()=>{
-                        handleSetActiveObj(layer.id)
+                      onClick={() => {
+                        handleSetActiveObj(layer.id);
+                      }}
+                      onDoubleClick={() => {
+                        handleDoubleClickObj(layer);
                       }}
                       // className="p-10 bg-gray-200 my-5 rounded-md "
                     >
-                      <span>{layer.id}</span>
+                      <span>{layer.name}</span>
                     </div>
                   )}
                 </Draggable>
               );
             })}
             {provided.placeholder}
-            {/* <Draggable draggableId={"123"} index={1}>
-                {(provided, snapshot) => (
-                  <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className="1" isDragging={snapshot.isDragging} {...provided.dragHandleProps}>1</div>
-                  </div>
-                )}
-              </Draggable>
-              <Draggable draggableId={"321"} index={2}>
-                {(provided, snapshot) => (
-                  <div ref={provided.innerRef} {...provided.draggableProps}>
-                    <div className="1" isDragging={snapshot.isDragging} {...provided.dragHandleProps}>2</div>
-                  </div>
-                )}
-              </Draggable> */}
           </div>
         )}
       </Droppable>

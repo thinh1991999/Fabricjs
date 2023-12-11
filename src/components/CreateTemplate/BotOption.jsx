@@ -10,7 +10,7 @@ const BotOption = () => {
   const selectedObjects = useContext(CreateTemplateContext).selectedObjects;
   const state = useContext(CreateTemplateContext).state;
   const dispatch = useContext(CreateTemplateContext).dispatch;
-  console.log('BotOption');
+  console.log("BotOption");
   const handleZoom = (e) => {
     if (!editor) return;
     const vl = e.target.value;
@@ -22,33 +22,52 @@ const BotOption = () => {
     }
   };
 
-  const downLoadImage=()=>{
-    const obj={
-      options:{...state},
-      img:editor?.getImage(),
-      canvasObj:editor?.getJson()
-    }
-  }
+  const downLoadTemplate = () => {
+    const obj = {
+      options: { ...state },
+      img: editor?.getImage(),
+      canvasObj: editor?.getJson(),
+    };
+    console.log(obj);
+  };
 
   const isEditable = useMemo(() => {
     if (selectedObjects.length < 1 || !state) return;
+    const checkIsEditable = (arr, idx) => {
+      console.log(arr);
+      for (let index = 0; index < arr.length; index++) {
+        const element = arr[index];
+        if (element.id === idx) return true;
+      }
+      return false;
+    };
     const id = selectedObjects[0].id;
+    const type = selectedObjects[0].get("type");
+    console.log(id, type);
     const { editableTexts, editableImages, editableBackgrounds } = state;
-    const arr = [...editableTexts, ...editableImages, ...editableBackgrounds];
-    return arr.includes(id);
+    switch (type) {
+      case canvasTypes.CIRCLE:
+        return checkIsEditable(editableBackgrounds, id);
+      case canvasTypes.TEXT:
+        return checkIsEditable(editableTexts, id);
+      case canvasTypes.IMAGE:
+        return checkIsEditable(editableImages, id);
+      default:
+        return false;
+    }
   }, [selectedObjects, state]);
 
   const handleSetEditable = () => {
     const id = selectedObjects[0].id;
-    console.log(selectedObjects[0].get("type"));
+    const name = selectedObjects[0].name;
     switch (selectedObjects[0].get("type")) {
       case canvasTypes.CIRCLE:
         break;
       case canvasTypes.TEXT:
-        dispatch(toggleEditableText(id));
+        dispatch(toggleEditableText({ id, name }));
         break;
       case canvasTypes.IMAGE:
-        dispatch(toggleEditableImage(id));
+        dispatch(toggleEditableImage({ id, name }));
         break;
       default:
         break;
@@ -82,27 +101,22 @@ const BotOption = () => {
                 className="ml-2 cursor-pointer"
               />
             </div>
-            <div className="flex items-center">
-              <label htmlFor="">Name object</label>
-              <TextInput
-                id="element"
-                type="text"
-                // onChange={handleZoom}
-                className="ml-2 cursor-pointer"
-              />
-            </div>
           </>
         )}
       </div>
       <div className="">
-        <Button color="light" onClick={()=>editor?.downloadImage()}>
+        <Button color="light" onClick={() => editor?.downloadImage()}>
           Down Load Image
         </Button>
-        <Button color="success" className="mt-5" onClick={()=>editor?.downloadJson()}>
+        <Button
+          color="success"
+          className="mt-5"
+          onClick={() => editor?.downloadJson()}
+        >
           Down Load Json
         </Button>
-        <Button color="dark" className="mt-5" onClick={downLoadImage}>
-          Down Option
+        <Button color="dark" className="mt-5" onClick={downLoadTemplate}>
+          Down Template
         </Button>
       </div>
     </div>

@@ -11,15 +11,15 @@ export const CreateTemplateContext = createContext();
 
 function CreateTemplate() {
   const [state, dispatch] = useReducer(CreateTLReducer, initValue);
-  const layerRef=useRef();
+  const layerRef = useRef();
 
-  const layerRenders=()=>{
+  const layerRenders = () => {
     layerRef.current.renderLayers();
-  }
+  };
 
   const { editor, onReady, selectedObjects } = useFabricJSEditor({
     defaultStrokeColor: "black",
-    renderLayers:layerRenders
+    renderLayers: layerRenders,
   });
   console.log("CreateTemplate");
   return (
@@ -36,8 +36,8 @@ function CreateTemplate() {
             </div>
             <BotOption />
           </div>
-          <div className="flex-1">
-            <Layer ref={layerRef}/>
+          <div className="w-[400px]">
+            <Layer ref={layerRef} />
           </div>
         </div>
       </div>

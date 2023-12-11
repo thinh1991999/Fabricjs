@@ -25,7 +25,7 @@ export const routes = [
     ),
   },
   {
-    title: "Creat Template",
+    title: "Create Template",
     path: "/create-template",
     requiredLogin: true,
     element: (

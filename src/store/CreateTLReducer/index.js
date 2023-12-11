@@ -7,28 +7,29 @@ export const initValue = {
 const CreateTLReducer = (state, { type, payload }) => {
   switch (type) {
     case "TOGGLE_EDITABLE_TEXT": {
-      const idx = state.editableTexts.findIndex((vl) => vl === payload);
+      console.log(payload);
+      const idx = state.editableTexts.findIndex((vl) => vl.id === payload.id);
       if (idx === -1)
         return {
           ...state,
           editableTexts: [...state.editableTexts, payload],
         };
-      state.editableTexts.splice(idx,1);
+      state.editableTexts.splice(idx, 1);
       return {
-        ...state
-      }
+        ...state,
+      };
     }
     case "TOGGLE_EDITABLE_IMAGE": {
-      const idx = state.editableImages.findIndex((vl) => vl === payload);
+      const idx = state.editableImages.findIndex((vl) => vl.id === payload.id);
       if (idx === -1)
         return {
           ...state,
           editableImages: [...state.editableImages, payload],
         };
-      state.editableImages.splice(idx,1);
+      state.editableImages.splice(idx, 1);
       return {
-        ...state
-      }
+        ...state,
+      };
     }
     default:
       return state;

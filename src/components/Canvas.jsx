@@ -9,23 +9,36 @@ const Canvas = ({ onReady }) => {
   useEffect(() => {
     const canvas = new fabric.Canvas(canvasEl.current);
     const setCurrentDimensions = () => {
-      canvas.setHeight(canvasElParent.current?.clientHeight || 0);
-      canvas.setWidth(canvasElParent.current?.clientWidth || 0);
+      canvas.setHeight(500 || 0);
+      canvas.setWidth(500 || 0);
       canvas.renderAll();
     };
     const resizeCanvas = () => {
       setCurrentDimensions();
     };
 
-    const deleteObject = (e) => {
-      e.keyCode===46 && canvas.remove(canvas.getActiveObject());
+    const handleKeyUp = (e) => {
+      const keyCode = e.keyCode;
+      console.log(keyCode);
+      switch (keyCode) {
+        //Delete
+        case 46:
+          canvas.remove(canvas.getActiveObject());
+          break;
+        //ESC
+        case 27:
+          canvas.discardActiveObject().renderAll();
+          break;
+        default:
+          break;
+      }
     };
+
     setCurrentDimensions();
 
     window.addEventListener("resize", resizeCanvas, false);
-    window.addEventListener("keyup", deleteObject, false);
+    window.addEventListener("keyup", handleKeyUp, false);
 
-    console.log(onReady);
     if (onReady && typeof onReady === "function") {
       onReady(canvas);
     }
@@ -38,8 +51,8 @@ const Canvas = ({ onReady }) => {
   }, []);
 
   return (
-    <div ref={canvasElParent} className="h-full">
-      <canvas ref={canvasEl} />
+    <div ref={canvasElParent} className="flex items-center justify-center">
+      <canvas ref={canvasEl} className="border border-gray-400" />
     </div>
   );
 };

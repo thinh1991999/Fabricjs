@@ -29,7 +29,7 @@ const Sidebar = () => {
     setSubside(vl.child);
     setIsShowSub(true);
   };
-  console.log(subside);
+
   return (
     <div className="flex">
       <ul className="bg-[#18181A] text-gray-400 w-[100px]">

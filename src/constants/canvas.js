@@ -36,12 +36,12 @@ export const defaultTexts = [
   },
 ];
 
-export const canvasTypes={
-  CIRCLE:"circle",
-  RECT:"rect",
-  TEXT:"text",
-  IMAGE:"image"
-}
+export const canvasTypes = {
+  CIRCLE: "circle",
+  RECT: "rect",
+  TEXT: "text",
+  IMAGE: "image",
+};
 
 export const fontFamilyOptions = [
   "Arial",
@@ -53,3 +53,5 @@ export const fontFamilyOptions = [
   "Impact",
   "Comic Sans MS",
 ];
+
+export const shapeBorderOptions = ["None", "Dot", "Solid"];

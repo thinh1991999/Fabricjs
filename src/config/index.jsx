@@ -1,8 +1,14 @@
-import { FaShapes, FaCloudUploadAlt, FaPencilAlt } from "react-icons/fa";
+import {
+  FaShapes,
+  FaPencilAlt,
+  FaImages,
+  FaRegFileVideo,
+} from "react-icons/fa";
 import { PiTextT } from "react-icons/pi";
 import SbElement from "../components/CreateTemplate/SbElement";
 import SbText from "../components/CreateTemplate/SbText";
-import SbUpload from "../components/CreateTemplate/SbUpload";
+import SbImageUpload from "../components/CreateTemplate/SbImageUpload";
+import SbVideoUpload from "../components/CreateTemplate/SbVideoUpload";
 
 const ElementData = [];
 
@@ -20,10 +26,16 @@ export const createTLSideData = [
     child: <SbText />,
   },
   {
-    hint: "upload",
-    title: "Uploads",
-    icon: <FaCloudUploadAlt />,
-    child: <SbUpload />,
+    hint: "image",
+    title: "Images",
+    icon: <FaImages />,
+    child: <SbImageUpload />,
+  },
+  {
+    hint: "video",
+    title: "Videos",
+    icon: <FaRegFileVideo />,
+    child: <SbVideoUpload />,
   },
   {
     hint: "draw",

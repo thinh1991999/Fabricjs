@@ -8,7 +8,6 @@ import {
   TEXT,
 } from "../constants/defaultShapes";
 import { guidGenerator } from "../utils";
-
 /**
  * Creates editor
  */
@@ -34,6 +33,7 @@ const buildEditor = (
       const object = new fabric.Rect({
         ...RECTANGLE,
         fill: fillColor,
+        name: "Rectangle" + Math.random() * 10,
         id: guidGenerator(),
         stroke: strokeColor,
       });
@@ -50,6 +50,7 @@ const buildEditor = (
       // use stroke in text fill, fill default is most of the time transparent
       const object = new fabric.Textbox(text, {
         ...TEXT,
+        name: "Text" + Math.random() * 10,
         id: guidGenerator(),
         ...values,
       });
@@ -101,30 +102,20 @@ const buildEditor = (
       const zoom = canvas.getZoom();
       canvas.setZoom(zoom * scaleStep);
     },
-    uploadImage: (file) => {
-      var reader = new FileReader();
-      reader.onload = function (event) {
-        var imgObj = new Image();
-        imgObj.src = event.target.result;
-        imgObj.onload = function () {
-          console.log(imgObj);
-          var image = new fabric.Image(imgObj, {
-            id: guidGenerator(),
-          });
-          image.scaleToWidth(300, false);
-          // image.set({
-          //       angle: 0,
-          //       padding: 10,
-          //       cornersize:10,
-          //       height:110,
-          //       width:110,
-          // });
-          canvas.centerObject(image);
-          canvas.add(image);
-          canvas.renderAll();
-        };
+    uploadImage: (img) => {
+      var imgObj = new Image();
+      imgObj.src = img.src;
+      imgObj.onload = function () {
+        console.log(imgObj);
+        var image = new fabric.Image(imgObj, {
+          id: guidGenerator(),
+          name: "Image" + Math.random() * 10,
+        });
+        image.scaleToWidth(300, false);
+        canvas.centerObject(image);
+        canvas.add(image);
+        canvas.renderAll();
       };
-      reader.readAsDataURL(file);
     },
     updateTextProperties: (type, val) => {
       canvas.getActiveObject().set(type, val);
@@ -159,12 +150,6 @@ const buildEditor = (
     getJson: () => {
       return canvas.getObjects();
     },
-    getImage: () => {
-      return canvas.toDataURL({
-        format: "png",
-        quality: 1.0,
-      });
-    },
     selectObj: (id) => {
       canvas.getObjects().forEach(function (o) {
         if (o.id === id) {
@@ -172,15 +157,29 @@ const buildEditor = (
         }
       });
     },
-    reorderObj:(id,idx)=>{
-      console.log(idx);
+    reorderObj: (id, idx) => {
       canvas.getObjects().forEach(function (o) {
         if (o.id === id) {
           o.moveTo(idx);
           return false;
         }
       });
-    }
+    },
+    getImage: () => {
+      return canvas.toDataURL({
+        format: "png",
+        quality: 1.0,
+      });
+    },
+    changeNameObj: (id, newName) => {
+      const object = canvas.getObjects().find((obj) => obj.id === id);
+      if (object) {
+        object.name = newName;
+        canvas.renderAll(); // Update the canvas display
+      } else {
+        console.warn(`Object with ID ${id} not found.`);
+      }
+    },
   };
 };
 

@@ -31,6 +31,18 @@ const CreateTLReducer = (state, { type, payload }) => {
         ...state,
       };
     }
+    case "TOGGLE_EDITABLE_SHAPE": {
+      const idx = state.editableBackgrounds.findIndex((vl) => vl.id === payload.id);
+      if (idx === -1)
+        return {
+          ...state,
+          editableBackgrounds: [...state.editableBackgrounds, payload],
+        };
+      state.editableBackgrounds.splice(idx, 1);
+      return {
+        ...state,
+      };
+    }
     default:
       return state;
   }

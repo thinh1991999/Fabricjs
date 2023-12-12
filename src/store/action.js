@@ -19,3 +19,10 @@ export const toggleEditableImage = (payload) => {
     payload,
   };
 };
+
+export const toggleEditableShape = (payload) => {
+  return {
+    type: "TOGGLE_EDITABLE_SHAPE",
+    payload,
+  };
+};

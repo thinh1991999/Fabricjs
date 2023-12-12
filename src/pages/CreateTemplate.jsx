@@ -1,11 +1,11 @@
 import { useReducer, createContext, useRef } from "react";
 import Sidebar from "../components/CreateTemplate/Sidebar";
 import Center from "../components/CreateTemplate/Center";
-import TopOption from "../components/CreateTemplate/TopOption";
+import TopOption from "../components/TopOption";
 import CreateTLReducer, { initValue } from "../store/CreateTLReducer";
 import { useFabricJSEditor } from "../hooks/useFabricJSEditor";
-import BotOption from "../components/CreateTemplate/BotOption";
-import Layer from "../components/CreateTemplate/Layer";
+import BotOption from "../components/BotOption";
+import Layer from "../components/Layer";
 
 export const CreateTemplateContext = createContext();
 
@@ -30,14 +30,14 @@ function CreateTemplate() {
         <div className="flex h-full">
           <Sidebar />
           <div className="flex-1 bg-slate-200 transition-all duration-300 ease-linear flex flex-col">
-            <TopOption />
+            <TopOption TemplateContext={CreateTemplateContext}/>
             <div className="h-full">
-              <Center />
+              <Center onReady={onReady}/>
             </div>
-            <BotOption />
+            <BotOption TemplateContext={CreateTemplateContext}/>
           </div>
           <div className="w-[400px]">
-            <Layer ref={layerRef} />
+            <Layer ref={layerRef} TemplateContext={CreateTemplateContext}/>
           </div>
         </div>
       </div>

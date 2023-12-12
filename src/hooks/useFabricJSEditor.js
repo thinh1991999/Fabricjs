@@ -24,6 +24,7 @@ const buildEditor = (
       const object = new fabric.Circle({
         ...CIRCLE,
         id: guidGenerator(),
+        name: "Circle" + Math.random() * 10,
         fill: fillColor,
         stroke: strokeColor,
       });
@@ -106,7 +107,6 @@ const buildEditor = (
       var imgObj = new Image();
       imgObj.src = img.src;
       imgObj.onload = function () {
-        console.log(imgObj);
         var image = new fabric.Image(imgObj, {
           id: guidGenerator(),
           name: "Image" + Math.random() * 10,
@@ -148,6 +148,9 @@ const buildEditor = (
       a.click();
     },
     getJson: () => {
+      return canvas.toJSON();
+    },
+    getObjects:()=>{
       return canvas.getObjects();
     },
     selectObj: (id) => {
@@ -180,6 +183,20 @@ const buildEditor = (
         console.warn(`Object with ID ${id} not found.`);
       }
     },
+    loadCanvasFromJson:(json)=>{
+      console.log(canvas);
+      canvas.loadFromJSON(json, canvas.renderAll.bind(canvas));
+    },
+    changeImageObject:(id,file)=>{
+      console.log(id);
+      canvas.getObjects().forEach(function (o) {
+        console.log(o);
+        if (o.id === id) {
+          console.log(o);
+          return false;
+        }
+      });
+    }
   };
 };
 

@@ -1,6 +1,28 @@
 import { Dropdown } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { templatesData } from "../../data";
+import { fakeCallApi } from "../../utils";
 
-const LeftSide = () => {
+const LeftSide = ({editor,setCurrOptions}) => {
+  const [templates, setTemplates] = useState([]);
+  console.log('LeftSide');
+  const loadTemplateIntoCanvas=(temp)=>{
+    editor?.loadCanvasFromJson(JSON.stringify(temp.canvasObj));
+    setCurrOptions(temp.options)
+  }
+
+  useEffect(() => {
+    const getTemplates = () => {
+      return templatesData;
+    };
+
+    const fetchTemplates = async () => {
+      const data = await fakeCallApi(2000, getTemplates);
+      setTemplates(data);
+    };
+    fetchTemplates();
+  }, []);
+
   return (
     <div>
       <h3 className="mb-4">Templates</h3>
@@ -20,7 +42,15 @@ const LeftSide = () => {
           </Dropdown>
         </div>
       </div>
-      <div className="flex flex-wrap">1</div>
+      <ul className="mt-10 flex flex-wrap">
+        {templates.map((temp, idx) => {
+          return (
+            <li key={idx} className="cursor-pointer" onClick={()=>loadTemplateIntoCanvas(temp)}>
+              <img src={temp.img} alt="" className="max-w-[200px]" />
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };

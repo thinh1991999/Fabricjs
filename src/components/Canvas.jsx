@@ -45,7 +45,7 @@ const Canvas = ({ onReady }) => {
     return () => {
       canvas.dispose();
       window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("keyup", deleteObject);
+      window.removeEventListener("keyup", handleKeyUp);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -1,9 +1,9 @@
 import Canvas from "../Canvas";
 
-const Center = () => {
+const Center = ({onReady}) => {
   return (
     <div>
-      <Canvas />
+      <Canvas onReady={onReady}/>
     </div>
   );
 };

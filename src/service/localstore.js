@@ -1,6 +1,7 @@
 class StoreService {
   IMAGES = "IMAGES";
   VIDEOS = "VIDEOS";
+  TEMPLATES="TEMPLATES"
 }
 
 class BaseStoreService {
@@ -12,6 +13,7 @@ class BaseStoreService {
     return JSON.parse(localStorage.getItem(this.key)) || [];
   }
   set(values) {
+    console.log(values);
     localStorage.setItem(this.key, JSON.stringify(values)) || [];
   }
   remove() {
@@ -22,6 +24,7 @@ class BaseStoreService {
 class LocalStorageService extends StoreService {
   imagesService = new BaseStoreService(this.IMAGES);
   videoService = new BaseStoreService(this.VIDEOS);
+  templateService = new BaseStoreService(this.TEMPLATES);
 }
 
 const localStorageService = new LocalStorageService();
